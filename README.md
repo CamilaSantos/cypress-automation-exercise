@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 # 🚀 clear - E2E Tests
-=======
-# 🚀 Cypress Automation Exercise - E2E Tests
->>>>>>> develop
 
 Este repositório contém testes automatizados End-to-End (E2E) desenvolvidos com **Cypress** para aprimorar habilidades em automação de testes e **JavaScript**.
 
@@ -30,8 +26,4 @@ O objetivo principal é praticar e consolidar conhecimentos em Cypress, utilizan
 
 * **Test Case 1:** Cadastro de Usuário
 * **Test Case 2:** Login com Credenciais Válidas
-<<<<<<< HEAD
 * **Test Case 3:** Adicionar Produto ao Carrinho
-=======
-* **Test Case 3:** Adicionar Produto ao Carrinho
->>>>>>> develop
