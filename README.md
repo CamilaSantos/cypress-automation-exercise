@@ -25,5 +25,6 @@ O objetivo principal é praticar e consolidar conhecimentos em Cypress, utilizan
 ## 📝 Test Cases Implementados
 
 * **Test Case 1:** Cadastro de Usuário
-* **Test Case 2:** Login com Credenciais Válidas
-* **Test Case 3:** Adicionar Produto ao Carrinho
+                - Login com Credenciais Válidas
+                - Deletar usuário
+* **Test Case 2:** Preencher e enviar fomulário para contato com a loja  (Contact us)
