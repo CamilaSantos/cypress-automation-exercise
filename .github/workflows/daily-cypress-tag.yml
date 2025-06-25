@@ -1,0 +1,43 @@
+name: Daily Cypress Test & Tag
+
+on:
+  push:
+    branches:
+      - develop # Este workflow será acionado toda vez que houver um push para a branch 'develop'
+  workflow_dispatch: # Permite que você execute este workflow manualmente na aba "Actions" do GitHub
+
+jobs:
+  run-tests-and-tag:
+    runs-on: ubuntu-latest # O ambiente onde o job será executado (uma máquina virtual Linux)
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4 # Baixa o código do seu repositório para a máquina virtual
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22' # Define a versão do Node.js. Use a versão que você usa localmente.
+                             # Se você usa Node 20, mude para '20'.
+
+      - name: Install Dependencies
+        run: npm install # Executa o comando para instalar todas as dependências do seu package.json
+
+      - name: Run Cypress Tests
+        run: npx cypress run # Executa seus testes Cypress em modo headless
+
+      - name: Get Current Date and Time
+        id: date
+        run: echo "TIMESTAMP=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
+        # Gera um timestamp para usar no nome da tag, garantindo unicidade
+
+      - name: Create Git Tag for Daily Test Run
+        run: |
+          TAG_NAME="daily-test-${{ steps.date.outputs.TIMESTAMP }}"
+          echo "Creating tag: $TAG_NAME"
+          git config user.name "GitHub Actions" # Configura o nome do usuário para o commit/tag
+          git config user.email "actions@github.com" # Configura o email do usuário
+          git tag $TAG_NAME # Cria a tag localmente
+          git push origin $TAG_NAME # Envia a tag para o repositório remoto no GitHub
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Token padrão fornecido pelo GitHub, com permissões para criar tags e push
