@@ -10,6 +10,9 @@ jobs:
   run-tests-and-tag:
     runs-on: ubuntu-latest # O ambiente onde o job será executado (uma máquina virtual Linux)
 
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4 # Baixa o código do seu repositório para a máquina virtual
