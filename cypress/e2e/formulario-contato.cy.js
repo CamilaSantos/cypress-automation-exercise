@@ -11,15 +11,14 @@ describe('Enviando relatório de contato "Contact us"', () => {
           cy.contains("Contact us").click();
           cy.url().should("include","/contact_us");
           cy.contains("Contact Us").should("be.visible");
-          cy.contains("Contact Us").should("be.visible");
           
           cy.get('input[data-qa="name"]').type("Test1");  
           
-          cy.get('input[data-qa="email"]').type("testfake@fake.com.br");;
+          cy.get('input[data-qa="email"]').type("testfake@fake.com.br");
           
-          cy.get('input[data-qa="subject"]').type("Test de contato");;
+          cy.get('input[data-qa="subject"]').type("Test de contato");
           
-          cy.get('[data-qa="message"]').type("Olá! Comprei uma blusa no site de vocês semana passada e chegou hoje, mas tem um problema. No site estava escrito que era azul, mas a blusa que recebi é roxa! Meu pedido é o número 78451. Comprei no dia 16/06 e chegou hoje (23/06). Fiquei bem chateada porque era um presente para minha filha e ela queria especificamente a cor azul. Agora não sei o que fazer. Vocês podem trocar para a cor certa? Ou me devolver o dinheiro? Por favor me ajudem a resolver isso o mais rápido possível. Obrigada! Maria");
+          cy.get('[data-qa="message"]').type("Meu pedido #78451 (blusa azul, 16/06) chegou roxa. Peço troca ou reembolso urgente.");
 
           // Upload do arquivo
           cy.get('input[type="file"]')
