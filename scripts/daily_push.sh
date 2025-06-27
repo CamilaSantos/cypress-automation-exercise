@@ -29,34 +29,29 @@ MODIFIED_FILES=$(git diff --name-only --diff-filter=M --cached)
 ADDED_FILES=$(git diff --name-only --diff-filter=A --cached)
 DELETED_FILES=$(git diff --name-only --diff-filter=D --cached)
 
-# Monta o corpo da mensagem de commit
+# Monta o corpo da mensagem de commit em uma única linha
 COMMIT_BODY=""
+SEPARATOR=" | " # Escolha seu separador, por exemplo: " | ", ", ", " - "
+
+declare -a parts # Declara um array para armazenar as partes da mensagem
 
 if [ -n "$MODIFIED_FILES" ]; then
-    COMMIT_BODY+="Arquivos atualizados:\n"
-    for file in $MODIFIED_FILES; do
-        COMMIT_BODY+="  - $file\n"
-    done
+    # Substitui as quebras de linha por espaços para saída em linha única e une com o separador
+    parts+=("Arquivos atualizados: $(echo "$MODIFIED_FILES" | tr '\n' ' ' | sed 's/ $//')")
 fi
 
 if [ -n "$ADDED_FILES" ]; then
-    if [ -n "$COMMIT_BODY" ]; then # Adiciona uma linha em branco se já houver conteúdo
-        COMMIT_BODY+="\n"
-    fi
-    COMMIT_BODY+="Novos arquivos (inseridos):\n"
-    for file in $ADDED_FILES; do
-        COMMIT_BODY+="  - $file\n"
-    done
+    parts+=("Novos arquivos (inseridos): $(echo "$ADDED_FILES" | tr '\n' ' ' | sed 's/ $//')")
 fi
 
 if [ -n "$DELETED_FILES" ]; then
-    if [ -n "$COMMIT_BODY" ]; then # Adiciona uma linha em branco se já houver conteúdo
-        COMMIT_BODY+="\n"
-    fi
-    COMMIT_BODY+="Arquivos removidos:\n"
-    for file in $DELETED_FILES; do
-        COMMIT_BODY+="  - $file\n"
-    done
+    parts+=("Arquivos removidos: $(echo "$DELETED_FILES" | tr '\n' ' ' | sed 's/ $//')")
+fi
+
+# Une todas as partes com o separador escolhido
+if [ ${#parts[@]} -gt 0 ]; then
+    IFS="$SEPARATOR" # Define o separador de campo interno
+    COMMIT_BODY="${parts[*]}" # Une os elementos do array usando o IFS
 fi
 
 # Se não houver nenhuma alteração stageada, aborta (após o git add .)
@@ -66,9 +61,9 @@ if [ -z "$COMMIT_BODY" ]; then
 fi
 
 # Monta a mensagem de commit final (cabeçalho + corpo)
-COMMIT_MESSAGE="feat: Atualização do projeto
-
-$COMMIT_BODY"
+# "feat: Atualização do projeto" será a linha de assunto.
+# O corpo agora estará em uma única linha após o assunto.
+COMMIT_MESSAGE="feat: Atualização do projeto ($COMMIT_BODY)"
 
 echo "----------------------------------------"
 echo "Preparando para commitar e enviar:"
