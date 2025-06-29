@@ -61,8 +61,6 @@ if [ -z "$COMMIT_BODY" ]; then
 fi
 
 # Monta a mensagem de commit final (cabeçalho + corpo)
-# "feat: Atualização do projeto" será a linha de assunto.
-# O corpo agora estará em uma única linha após o assunto.
 COMMIT_MESSAGE="feat: Atualização do projeto ($COMMIT_BODY)"
 
 echo "----------------------------------------"

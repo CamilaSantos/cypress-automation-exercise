@@ -1,6 +1,6 @@
-const nome = "Jennifer";
-const email = "jennifer.sarah.assuncao@cladm.com.br";
-const password = "jennifer.sarah";
+const nome = Cypress.env("TEST_USER_NAME");
+const email = Cypress.env("TEST_USER_EMAIL");
+const password = Cypress.env("TEST_USER_PASSWORD");
 
 
 describe("Criar acesso de usuário (Signup)", () => {

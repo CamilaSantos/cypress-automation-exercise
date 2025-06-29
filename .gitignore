@@ -57,7 +57,7 @@ cypress/downloads/ # Arquivos baixados durante os testes (se houver)
 .DS_Store          # macOS
 Thumbs.db          # Windows
 .idea/             # JetBrains (IntelliJ, WebStorm, etc.)
-.vscode/           # Visual Studio Code (alguns arquivos, não todas as configurações de projeto)
+.vscode/          # Visual Studio Code (alguns arquivos, não todas as configurações de projeto)
 *.sublime-project
 *.sublime-workspace
 *.swp              # Arquivos de swap do Vim
@@ -206,4 +206,8 @@ dist
 /lib/
 >>>>>>> develop
 
+.vscode
+results
+reports
 
+exemplo-logado.cy.js
