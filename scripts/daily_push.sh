@@ -24,6 +24,49 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+echo "========================================"
+echo "  EXECUTANDO TESTES CYPRESS E GERANDO RELATÓRIOS LOCAIS  "
+echo "========================================"
+
+# Isso simula o nome da tag ou branch que você usaria no Actions
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+REPORT_NAME="${CURRENT_BRANCH}_$(date +'%Y%m%d_%H%M%S')" # Nome do relatório com branch e timestamp
+
+# 1. Executa os testes Cypress (gerará os arquivos JSON em cypress/results)
+echo "Executando: npx cypress run"
+npx cypress run
+if [ $? -ne 0 ]; then
+    echo "ATENÇÃO: Testes Cypress falharam! No entanto, continuaremos com o processo de commit/push."
+    # Se você quiser que o script aborte se os testes falharem, descomente a linha abaixo:
+    # exit 1
+fi
+
+# 2. Mescla os arquivos JSON dos relatórios
+echo "Executando: npx mochawesome-merge cypress/results/*.json > cypress/results/mochawesome-combined.json"
+npx mochawesome-merge cypress/results/*.json > cypress/results/mochawesome-combined.json
+if [ $? -ne 0 ]; then
+    echo "Erro ao mesclar relatórios. Abortando."
+    exit 1
+fi
+
+# 3. Gera o relatório HTML a partir do JSON mesclado
+echo "Executando: npx marge cypress/results/mochawesome-combined.json --reportDir cypress/reports --reportFilename ${REPORT_NAME} --inline"
+npx marge cypress/results/mochawesome-combined.json --reportDir cypress/reports --reportFilename ${REPORT_NAME} --inline
+if [ $? -ne 0 ]; then
+    echo "Erro ao gerar relatório HTML. Abortando."
+    exit 1
+fi
+
+
+# 4. Limpeza dos arquivos JSON temporários
+echo "Limpando arquivos JSON temporários..."
+rm -f cypress/results/*.json # Remove todos os JSONs individuais e o combinado
+
+echo "========================================"
+echo "  GERAÇÃO DE RELATÓRIOS LOCAIS CONCLUÍDA  "
+echo "  (Relatórios não serão enviados para o GitHub)  "
+echo "========================================"
+
 # Captura as alterações stageadas e as classifica
 MODIFIED_FILES=$(git diff --name-only --diff-filter=M --cached)
 ADDED_FILES=$(git diff --name-only --diff-filter=A --cached)
