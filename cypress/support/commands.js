@@ -120,6 +120,7 @@ Cypress.Commands.add('deleteUserViaUI', () => {
     cy.get('a[data-qa="continue-button"]').should('be.visible').click();
 });
 
+//Realizar logout do usuário logado
 Cypress.Commands.add('logout', () => {
   cy.log('Executando logout...');
   cy.get('a[href="/logout"]').click();

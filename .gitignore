@@ -49,18 +49,25 @@ coverage/
 # Artefatos de teste do Cypress
 cypress/videos/
 cypress/screenshots/
-cypress/reports/ # Se você gera relatórios de teste em uma pasta "reports"
-cypress/results/ # Se você gera relatórios de teste em uma pasta "results"
-cypress/downloads/ # Arquivos baixados durante os testes (se houver)
+cypress/reports/ 
+cypress/results/
+# Arquivos baixados durante os testes (se houver)
+
+cypress/downloads/ 
 
 # Configurações de IDE e sistema operacional
-.DS_Store          # macOS
-Thumbs.db          # Windows
-.idea/             # JetBrains (IntelliJ, WebStorm, etc.)
-.vscode/          # Visual Studio Code (alguns arquivos, não todas as configurações de projeto)
+# macOS
+.DS_Store   
+# Windows       
+Thumbs.db  
+# JetBrains (IntelliJ, WebStorm, etc.)        
+.idea/  
+# Visual Studio Code (alguns arquivos, não todas as configurações de projeto)           
+.vscode/          
 *.sublime-project
 *.sublime-workspace
-*.swp              # Arquivos de swap do Vim
+# Arquivos de swap do Vim
+*.swp              
 
 # Arquivos de dump ou crash
 *.dump
@@ -206,8 +213,6 @@ dist
 /lib/
 >>>>>>> develop
 
-.vscode
-results
-reports
 
+#scripts de exemplos
 exemplo-logado.cy.js
