@@ -6,14 +6,6 @@ describe('', () => {
   });
 
   describe('Visualizar produtos - "Products"', () => {
-        //1 Acessar a página principal
-        //2 Verificar que está na página principal
-        //3 Cliar em 'Products'
-        //4 Verificar que está na pagina 'Products' texto: ALL PRODUCTS
-        //5 Lita de produtos visiveis 
-        //6 Cliar em 'View Product' do primeiro produto
-        //7 O usuário sendo direicionado para tela de detalhe do produto, valide se os seguintes elementos estão visíveis: 
-        // product name, category, price, availability, condition, brand
 
         it('Acessar a página de produtos visualizar seus detalhes', () => {
             cy.get('a[href="/products"]').should('be.visible').click();

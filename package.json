@@ -3,13 +3,23 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    
+    "cypress:run": "npx cypress run",
+    
+    "cypress:report": "npm run cypress:clean-reports && npm run cypress:run -- --headless --browser electron && npm run cypress:merge-reports",
+    
+    "cypress:clean-reports": "rm -rf cypress/results/* || true && rm -rf cypress/reports/* || true",
+    
+    "cypress:merge-reports": "mochawesome-merge cypress/results/*.json > cypress/results/mochawesome-combined.json && npx marge cypress/results/mochawesome-combined.json --reportDir cypress/reports --inline"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "cypress": "^14.4.1"
+    "cypress": "^14.4.1",
+    "mochawesome": "^7.1.3",
+    "mochawesome-merge": "^5.0.0"
   }
 }
