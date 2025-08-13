@@ -3,7 +3,7 @@ const email = Cypress.env("TEST_USER_EMAIL");
 const password = Cypress.env("TEST_USER_PASSWORD");
 
 
-describe("Criar acesso de usuário (Signup)", () => {
+describe("Test Case 1 - Criar acesso de usuário (Signup)", () => {
   beforeEach(() =>{
     cy.viewport(1920, 1080); 
     cy.visit('/');

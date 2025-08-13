@@ -26,7 +26,7 @@
 
 
 //Criando o comando cy.login para poder ser utilizada nos demais scripts
-Cypress.Commands.add('login', (email, password, nome) => {
+Cypress.Commands.add('loginUserViaUI', (email, password, nome) => {
     cy.session([email, password, nome], () => {
         cy.visit('/login'); //Acessando a página de login do site
     
@@ -44,7 +44,7 @@ Cypress.Commands.add('login', (email, password, nome) => {
 });
 
 // Criar usuário
-Cypress.Commands.add('createTestUserViaUI', (nome, email, password) => {
+Cypress.Commands.add('createTestUserViaUI', (email, password, nome) => {
     cy.log(`Executando criação de usuário via UI: ${email} (Nome: ${nome})`);
 
      cy.contains("Signup / Login").click();
@@ -112,7 +112,7 @@ Cypress.Commands.add('createTestUserViaUI', (nome, email, password) => {
 //Deleta usuário
 Cypress.Commands.add('deleteUserViaUI', () => {
     cy.log('Executando deleção do usuário via UI.');
-
+    cy.visit('/');
     cy.get('a[href="/delete_account"]').should('be.visible').click();
     cy.url().should('include', '/delete_account');
     cy.contains('Account Deleted!').should('be.visible'); // Mensagem de sucesso na tela
@@ -121,9 +121,11 @@ Cypress.Commands.add('deleteUserViaUI', () => {
 });
 
 //Realizar logout do usuário logado
-Cypress.Commands.add('logout', () => {
+Cypress.Commands.add('logoutUserViaUI', () => {
   cy.log('Executando logout...');
+  cy.visit('/');
   cy.get('a[href="/logout"]').click();
   cy.url().should('include', '/login');
   cy.contains("Signup / Login").should('be.visible');
+  cy.visit('/');
 });

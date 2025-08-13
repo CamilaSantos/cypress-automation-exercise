@@ -7,7 +7,7 @@ describe("", () => {
   const prod1 = 22;
 
   describe("Incluir produtos no carrinho", () => {
-    it("Adicionar 3 produtos no carrinho e validar que os produtos estão no carrinho", () => {
+    it("Adicionar 1 produto no carrinho e validar que os produtos estão no carrinho", () => {
       cy.get('a[href="/products"]').should("be.visible").click();
       cy.url().should("include", "/products");
       cy.contains("All Products").should("be.visible");
