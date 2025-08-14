@@ -13,7 +13,7 @@ module.exports = defineConfig({
       //   return launchOptions;
       // });
       on('before:browser:launch', (browser = {}, launchOptions) => {
-        if (browser.name === 'chrome' || browser.name === 'chromium' || browser.name === 'electron') {
+        if (browser.family === 'chromium' && browser.name !== 'electron') {
           launchOptions.args.push('--disable-gpu');
         }
         return launchOptions;
