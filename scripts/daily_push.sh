@@ -34,7 +34,7 @@ REPORT_NAME="${CURRENT_BRANCH}_$(date +'%Y%m%d_%H%M%S')" # Nome do relatório co
 
 # 1. Executa os testes Cypress (gerará os arquivos JSON em cypress/results)
 echo "Executando: npx cypress run"
-npx cypress run
+CYPRESS_NO_BROWSER_LOGS=1 npx cypress run
 if [ $? -ne 0 ]; then
     echo "ATENÇÃO: Testes Cypress falharam! No entanto, continuaremos com o processo de commit/push."
     # Se você quiser que o script aborte se os testes falharem, descomente a linha abaixo:
