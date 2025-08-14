@@ -47,7 +47,71 @@ Cypress.Commands.add('loginUserViaUI', (email, password, nome) => {
 Cypress.Commands.add('createTestUserViaUI', (email, password, nome) => {
     cy.log(`Executando criação de usuário via UI: ${email} (Nome: ${nome})`);
 
-     cy.contains("Signup / Login").click();
+        cy.contains("Signup / Login").click();
+        cy.url().should("include", "/login");
+        cy.contains("New User Signup!").should("be.visible");
+        cy.get('input[data-qa="signup-name"]').type(nome);
+        cy.get('input[data-qa="signup-email"]').type(email);
+
+        // Caso o dev utilize boa práticas incluindo atributos personalizados no front, ex.: data-qa
+        cy.get('[data-qa="signup-button"]').click();
+        cy.contains("Enter Account Information").should("be.visible");
+        cy.get("#id_gender1").check();
+        cy.get("#id_gender1").should("be.checked");
+        cy.get("#id_gender2").should("not.be.checked");
+
+        cy.get('input[data-qa="name"]')
+          .should("be.visible")
+          .and("have.value", nome);
+        cy.get('input[data-qa="email"]')
+          .should("be.visible")
+          .and("have.value", email);
+
+        cy.get('input[data-qa="password"]').type(password);
+
+        cy.get('[data-qa="days"]')
+          .select("19")
+          .find("option:selected") //Encontra o option selecionado
+          .should("have.text", "19"); //Valida se o texto visível desse option é '27'
+        cy.get('[data-qa="months"]')
+          .select("April")
+          .find("option:selected") 
+          .should("have.text", "April"); 
+        cy.get('[data-qa="years"]')
+          .select("1990")
+          .find("option:selected") 
+          .should("have.text", "1990");
+
+        cy.get("#newsletter").uncheck();
+        cy.get("#newsletter").should("not.be.checked"); //Valida se está a caixa está checkada
+        cy.get("#optin").check();
+        cy.get("#optin").should("be.checked"); //Valida se está a caixa está checkada
+
+        cy.contains("Address Information").should("be.visible");
+
+        cy.get('input[data-qa="first_name"]').type(nome);
+        cy.get('input[data-qa="last_name"]').type("Sarah");
+        cy.get('input[data-qa="address"]').type("Quadra Quadra 5 Comércio Local 5");
+        cy.get('[data-qa="country"]')
+          .select("New Zealand")
+          .find("option:selected")
+          .should("have.text", "New Zealand");
+        cy.get('input[data-qa="state"]').type("DF");
+        cy.get('input[data-qa="city"]').type("BRASILIA");
+        cy.get('input[data-qa="zipcode"]').type("73031515");
+        cy.get('input[data-qa="mobile_number"]').type("61985216700");
+        cy.get('[data-qa="create-account"]').click();
+        
+        cy.url().should('include', '/account_created');
+        cy.contains("Account Created!").should("be.visible");
+        cy.get('a[data-qa="continue-button"]').click();
+        cy.url().should('include', '/'); // Volta para a home page logado
+        cy.contains('a', ' Logged in as ').should('be.visible').and('contain', nome);
+});
+
+Cypress.Commands.add('createTestUserViaUI_Continue', (email, password, nome) => {
+    cy.log(`Executando criação de usuário via UI: ${email} (Nome: ${nome})`);
+
         cy.url().should("include", "/login");
         cy.contains("New User Signup!").should("be.visible");
         cy.get('input[data-qa="signup-name"]').type(nome);
