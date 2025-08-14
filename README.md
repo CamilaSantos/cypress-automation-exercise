@@ -1,4 +1,4 @@
-# 🚀 clear - E2E Tests
+# 🚀 Exercise Automation - E2E Tests
 
 Este repositório contém testes automatizados End-to-End (E2E) desenvolvidos com **Cypress** para aprimorar habilidades em automação de testes e **JavaScript**.
 
