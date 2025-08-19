@@ -9,7 +9,6 @@ describe('Test Case 16 - Realizar login e finalizar uma compra', () => {
         cy.visit('/');
         cy.url().should("include", "/");
         cy.createTestUserViaUI(email, password, nome);
-        cy.logoutUserViaUI();
     });
 
     after(()=>{
@@ -17,9 +16,6 @@ describe('Test Case 16 - Realizar login e finalizar uma compra', () => {
     });
 
     it('Fazer login completar uma compra', () => {
-
-        cy.loginUserViaUI(email, password, nome);
-        
         cy.get('.nav.navbar-nav a[href="/products"]').click();
         cy.url().should("include", "/products");
         cy.get('a[data-product-id="3"]').contains('Add to cart').click();
