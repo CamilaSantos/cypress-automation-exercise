@@ -24,7 +24,4 @@ O objetivo principal é praticar e consolidar conhecimentos em Cypress, utilizan
 
 ## 📝 Test Cases Implementados
 
-* **Test Case 1:** Cadastro de Usuário
-                - Login com Credenciais Válidas
-                - Deletar usuário
-* **Test Case 2:** Preencher e enviar fomulário para contato com a loja  (Contact us)
+* **Todos:** - Lista de 26 casos de teste: https://automationexercise.com/test_cases  
