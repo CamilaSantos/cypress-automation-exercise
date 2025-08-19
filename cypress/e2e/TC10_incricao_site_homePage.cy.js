@@ -3,10 +3,11 @@ describe('Test Case 10 - Se inscrever no site através do "Subscriber" na Home P
     beforeEach(() => {
         cy.viewport(1920, 1080);
         cy.visit("/");
+        cy.url().should('include', '/');
+
     });
     
     it('Inscrição através do SUBSCRIPTION da home page', () => {
-        cy.url().should('include', '/');
         cy.contains('h2', 'Subscription').should('be.visible');
         cy.get('input#susbscribe_email').type('teste1@teste.com.br');
         cy.get('button#subscribe').click();

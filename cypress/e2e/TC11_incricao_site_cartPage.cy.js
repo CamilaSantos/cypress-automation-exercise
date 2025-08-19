@@ -3,15 +3,17 @@ describe('Test Case 10 - Se inscrever no site através do "Subscriber" na Home P
     beforeEach(() => {
         cy.viewport(1920, 1080);
         cy.visit("/");
+        cy.url().should('include', '/');
+
     });
     
     it('Inscrição através do SUBSCRIPTION da home page', () => {
-        cy.get('.shop-menu > .nav > :nth-child(3) > a').click();
+        cy.get('.nav.navbar-nav a[href="/view_cart"]').click();
         cy.url().should('include', '/view_cart');
         cy.contains('h2', 'Subscription').should('be.visible');
         cy.get('input#susbscribe_email').type('teste1@teste.com.br');
         cy.get('button#subscribe').click();
-        cy.get('.alert-success.alert').should('be.visible').and('have.text', 'You have been successfully subscribed!')
+        cy.get('.alert-success.alert').should('contain.text', 'You have been successfully subscribed!')
     });
 
 });

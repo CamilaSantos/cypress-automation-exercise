@@ -7,7 +7,7 @@ describe('Test Case 19 - Validar página Brand', () => {
     });
 
     it('Acessar página Brand através do menu lateral, e selecionar diferentes brands para garantir funcionalidade', () => {
-        cy.visit('/products');
+        cy.get('.nav.navbar-nav a[href="/products"]').click();
         cy.url().should('include', '/products');
         cy.get('.brands_products h2').should('contains.text', 'Brands');
         cy.get('.brands-name a[href="/brand_products/Polo"]').should('contains.text', 'Polo').click();

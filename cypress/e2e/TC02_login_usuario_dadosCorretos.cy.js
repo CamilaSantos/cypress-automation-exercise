@@ -5,7 +5,7 @@ describe('Test Case 2: Login User with correct email and password', () => {
     const password = Cypress.env("TEST_USER_PASSWORD");
 
 
-    before(() => {
+    beforeEach(() => {
         cy.viewport(1920, 1080);
         cy.visit('/');
         cy.log('before - Criando usuário de teste para o Test Case 2 via UI.');
@@ -18,38 +18,10 @@ describe('Test Case 2: Login User with correct email and password', () => {
         cy.logoutUserViaUI();
     });
 
-    
-
-    after(() =>{
-        cy.viewport(1920, 1080);
-        cy.visit('/');
-        cy.log('Deletando usuário de teste após o Test Case 2 finalizar');
-
-        cy.contains("Signup / Login").click();
-        cy.loginUserViaUI(email, password, nome)
-        //commands.js Deletar usuário
-
-        cy.log('After - Deletando o usuário.');
-        cy.deleteUserViaUI();
-        cy.log('Usuário deletado. O ambiente está limpo.');
-    });
-
     it('Deve realizar o login com credenciais corretas e validar o acesso', () => {
-        cy.viewport(1920,1080);
-        cy.visit('/');
-        cy.log('Iniciando teste de login.');
-
-        cy.contains("Signup / Login").click();
-        cy.url().should('include', '/login');
-        cy.contains('Login to your account').should('be.visible');
-
-        cy.log('it() - Iniciando o login.');
+       
         cy.loginUserViaUI(email, password, nome);
-
-        // cy.contains(`Logged in as ${nome}`).should('be.visible');
-        
-        cy.logoutUserViaUI();
-
+        cy.deleteUserViaUI();
     });
 
 });

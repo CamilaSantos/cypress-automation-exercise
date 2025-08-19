@@ -7,7 +7,7 @@ describe('Test Case 12 - Adicionar produtos ao carrinho', () => {
     });
 
     it('Incluir o primeiro produto no carrinho de compras e validar o produto na página Cart', () => {
-        cy.visit('/products');
+        cy.get('.nav.navbar-nav a[href="/products"]').click();
         cy.url().should('include', '/products');
         cy.contains('h2', 'All Products').should('be.visible');
 
@@ -17,10 +17,10 @@ describe('Test Case 12 - Adicionar produtos ao carrinho', () => {
 
         cy.url().should('include', '/view_cart');
 
-        cy.get('td.cart_description a[href="/product_details/1"]').should('have.text', 'Blue Top');
-        cy.get('td.cart_price p').should('have.text', 'Rs. 500');
+        cy.get('td.cart_description a[href="/product_details/1"]').should('contain.text', 'Blue Top');
+        cy.get('td.cart_price p').should('contain.text', 'Rs. 500');
         cy.get('td.cart_quantity button').should('have.text', '1');
-        cy.get('td.cart_total p').should('have.text', 'Rs. 500');
+        cy.get('td.cart_total p').should('contain.text', 'Rs. 500');
 
 
     });

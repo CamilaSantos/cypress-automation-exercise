@@ -6,8 +6,8 @@ describe('Test Case 13 - Validar a quantidade de produto no carrinho', () => {
   });
 
   it("Na tela de produto adicionar 4 produtos no carrinho e validar a quantidade de produtos na página Cart", () => {
-    cy.visit("/products");
-    cy.url().should("include", "/products");
+    cy.get('.nav.navbar-nav a[href="/products"]').click();
+    cy.url().should('include', '/products');
     cy.contains("h2", "All Products").should("be.visible");
 
 
