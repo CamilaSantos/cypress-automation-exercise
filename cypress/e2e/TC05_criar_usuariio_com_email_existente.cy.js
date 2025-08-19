@@ -13,8 +13,6 @@ describe('Test Case 5 - Registrar um novo usuário com um e-mail já existente',
     });
 
     after(() => {
-        cy.viewport(1900,1080);
-        cy.visit('/');
         cy.loginUserViaUI(email, password, nome);
         cy.deleteUserViaUI();
     });

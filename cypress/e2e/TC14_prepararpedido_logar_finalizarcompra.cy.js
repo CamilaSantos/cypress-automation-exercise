@@ -6,6 +6,7 @@ describe("Test Cases 14 - Finalização Compra - Se registrar após incluir iten
   beforeEach("", () => {
     cy.viewport(1920, 1080);
     cy.visit("/");
+    cy.url().should("include", "/");
   });
 
   after("[hook:after] - Deletar usuário", () => {
@@ -13,7 +14,6 @@ describe("Test Cases 14 - Finalização Compra - Se registrar após incluir iten
   });
 
   it("Preparar pedido, realizar o cadastro de um novo usuário e finalizar a compra", () => {
-    cy.url().should("include", "/");
     cy.visit("/products");
     cy.url().should("include", "/products");
     cy.contains("h2", "All Products").should("be.visible");
@@ -55,7 +55,7 @@ describe("Test Cases 14 - Finalização Compra - Se registrar após incluir iten
       "contain.text",
       "Quadra Quadra 5 Comércio Local 5"
     );
-    // cy.get('ul#address_delivery').find('li.address_city.address_state_name.address_postcode').should('have.text', 'BRASILIA DF\n\t\t\t\t\t\t\t\t73031515');
+    
     cy.get("ul#address_delivery")
       .find("li.address_city.address_state_name.address_postcode")
       .invoke("text")

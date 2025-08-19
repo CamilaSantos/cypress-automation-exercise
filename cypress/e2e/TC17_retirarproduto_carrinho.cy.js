@@ -7,7 +7,7 @@ describe('Test case 17 - Remover produto do carrinho',() =>{
     });
 
     it('Incluir produto no carrinho, consultar a página "Cart" e remover produto do carrinho. ', () => {
-        cy.visit('/products');
+        cy.get('.nav.navbar-nav a[href="/products"]').click();
         cy.url().should('include', '/products');
 
         cy.get('.productinfo.text-center a[data-product-id="5"]').should('contain.text', 'Add to cart').click();

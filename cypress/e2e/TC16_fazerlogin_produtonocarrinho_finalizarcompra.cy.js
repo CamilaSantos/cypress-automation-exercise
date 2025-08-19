@@ -20,7 +20,7 @@ describe('Test Case 16 - Realizar login e finalizar uma compra', () => {
 
         cy.loginUserViaUI(email, password, nome);
         
-        cy.visit('/products');
+        cy.get('.nav.navbar-nav a[href="/products"]').click();
         cy.url().should("include", "/products");
         cy.get('a[data-product-id="3"]').contains('Add to cart').click();
         cy.get('p.text-center').contains('Your product has been added to cart.').should('be.visible');

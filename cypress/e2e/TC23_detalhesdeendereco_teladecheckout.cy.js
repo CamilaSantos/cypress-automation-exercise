@@ -16,7 +16,7 @@ describe('Test Case 23 - Validar endereços na tela de Checkout', () =>{
     });
 
     it('Validar endereço de usuário na tela de checkout', () => {
-        cy.get('ul.nav.navbar-nav a[href="/products"]').should('contains.text', ' Products').click();
+        cy.get('ul.nav.navbar-nav a[href="/products"]').click();
         cy.url().should('include', '/products');
         cy.get('h2.title.text-center').should('contain.text', 'All Products');
         cy.get('.productinfo a[data-product-id="5"]').click();
