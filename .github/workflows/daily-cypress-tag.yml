@@ -3,7 +3,7 @@ name: Daily Cypress Test & Tag
 on:
   push:
     branches:
-      - develop # Este workflow será acionado toda vez que houver um push para a branch 'develop'
+      - main # Este workflow será acionado toda vez que houver um push para a branch 'develop'
   workflow_dispatch: # Permite que você execute este workflow manualmente na aba "Actions" do GitHub
 
 jobs:
@@ -51,6 +51,6 @@ jobs:
            echo "Compactando e enviando resultados para o Allure Server..."
            
            cd cypress/fixtures || mkdir -p allures && cd allures
-           
+
            curl -X POST -H "Content-Type: application/json" \
              http://172.22.91.100:5050/allure-docker-service/empy-v2-api-call-or-send-results
