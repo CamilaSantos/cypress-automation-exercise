@@ -1,4 +1,5 @@
 const { defineConfig } = require("cypress");
+const { configureAllureAdapterPlugins } = require("@mmisty/cypress-allure-adapter/plugins");
 
 module.exports = defineConfig({
   e2e: {
@@ -18,6 +19,11 @@ module.exports = defineConfig({
         }
         return launchOptions;
       });
+
+      configureAllureAdapterPlugins(on, config);
+      
+      return config;
+      
      },
      watchForFileChanges: false,      
      specPattern: 'cypress/e2e/**/*.cy.{js,jsx,ts,tsx}', // Adapte ao padrão dos seus arquivos de teste
