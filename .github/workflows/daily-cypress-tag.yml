@@ -46,11 +46,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Send Results to Allure Server
-        if: always() # Garante o envio mesmo se os testes falharem
+        if: always()
         run: |
-           echo "Compactando e enviando resultados para o Allure Server..."
-           
-           cd cypress/fixtures || mkdir -p allures && cd allures
-
-           curl -X POST -H "Content-Type: application/json" \
-             http://172.22.91.100:5050/allure-docker-service/empy-v2-api-call-or-send-results
+           echo "Enviando resultados para o Allure Server..."
+           # Verifica se a pasta existe antes de enviar para evitar falhas no script
+           if [ -d "allure-results" ]; then
+             echo "Enviando dados encontrados..."
+             # Comando limpo para o Allure processar a carga
+             curl -X POST -H "Content-Type: application/json" \
+               http://172.22.91.100:5050/allure-docker-service/generate-report
+           else
+             echo "Nenhum resultado do Allure foi gerado nesta execução."
+           fi
