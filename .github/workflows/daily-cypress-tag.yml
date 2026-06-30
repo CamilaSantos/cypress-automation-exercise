@@ -3,7 +3,7 @@ name: Daily Cypress Test & Tag
 on:
   push:
     branches:
-      - main # Este workflow será acionado toda vez que houver um push para a branch 'develop'
+      - main # Este workflow será acionado toda vez que houver um push para a branch 'main'
   workflow_dispatch: # Permite que você execute este workflow manualmente na aba "Actions" do GitHub
 
 jobs:
@@ -20,21 +20,23 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22' # Define a versão do Node.js. Use a versão que você usa localmente.
-                             # Se você usa Node 20, mude para '20'.
+          node-version: '22' # Define a versão do Node.js.
 
       - name: Install Dependencies
         run: npm install # Executa o comando para instalar todas as dependências do seu package.json
 
       - name: Run Cypress Tests
         run: npx cypress run # Executa seus testes Cypress em modo headless
+        if: always()
 
       - name: Get Current Date and Time
         id: date
+        if: always()
         run: echo "TIMESTAMP=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
         # Gera um timestamp para usar no nome da tag, garantindo unicidade
 
       - name: Create Git Tag for Daily Test Run
+        if: always()
         run: |
           TAG_NAME="daily-test-${{ steps.date.outputs.TIMESTAMP }}"
           echo "Creating tag: $TAG_NAME"
@@ -44,6 +46,20 @@ jobs:
           git push origin $TAG_NAME # Envia a tag para o repositório remoto no GitHub
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # PASSO CORRETIVO: Sincroniza a pasta local gerada pelo Cypress com o diretório global do Allure
+      - name: Sync Results to Global Directory
+        if: always()
+        run: |
+          echo "Verificando relatórios locais gerados pelo Cypress..."
+          if [ -d "allure-results" ]; then
+            echo "Copiando arquivos locais para /opt/allure/allure-results..."
+            mkdir -p /opt/allure/allure-results
+            cp -r allure-results/* /opt/allure/allure-results/
+            echo "Sincronização de arquivos concluída com sucesso."
+          else
+            echo "Aviso: A pasta local 'allure-results' não foi gerada pelo Cypress neste run."
+          fi
 
       - name: Send Results to Allure Server
         if: always()
@@ -72,10 +88,11 @@ jobs:
            });
 
            if (results.length === 0) {
-             console.log("Nenhum arquivo encontrado para envio.");
+             console.log("Nenhum arquivo encontrado para envio na pasta global /opt/allure/allure-results.");
              process.exit(0);
            }
 
+           console.log(`Enviando ${results.length} arquivos para a API do Allure...`);
            const payload = JSON.stringify({ results });
 
            // Envia os dados brutos para o motor (Porta 5050)
@@ -95,7 +112,7 @@ jobs:
                
                // Solicita a geracao do relatorio no motor (Porta 5050)
                http.get("http://172.22.91.100:5050/allure-docker-service/generate-report?project_id=default", (res2) => {
-                 console.log("Processamento concluido na API.");
+                 console.log("Processamento e atualizacao concluidos na API Allure.");
                });
              });
            });
