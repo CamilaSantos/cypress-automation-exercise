@@ -48,7 +48,7 @@ jobs:
       - name: Send Results to Allure Server
         if: always()
         run: |
-           echo "Empacotando e transmitindo resultados para a API do Allure..."
+           echo "Verificando e empacotando os resultados do Cypress..."
            
            node -e '
            const fs = require("fs");
@@ -56,11 +56,14 @@ jobs:
            const http = require("http");
 
            const resultsDir = "allure-results";
+           
+           // Verifica se o Cypress gerou a pasta de relatorios
            if (!fs.existsSync(resultsDir)) {
-             console.log("Aviso: Pasta allure-results nao encontrada. Os testes geraram relatorios?");
-             process.exit(0);
+             console.log("Erro: O diretorio allure-results nao existe. Certifique-se de que o plugin do Allure esta ativo no Cypress.");
+             process.exit(1);
            }
 
+           // Le todos os arquivos de resultados e converte para Base64 conforme exigido pela API
            const files = fs.readdirSync(resultsDir).filter(f => fs.lstatSync(path.join(resultsDir, f)).isFile());
            const results = files.map(file => {
              const filePath = path.join(resultsDir, file);
@@ -70,32 +73,41 @@ jobs:
              };
            });
 
-           console.log(`Enviando ${results.length} arquivos para o servidor...`);
+           if (results.length === 0) {
+             console.log("Aviso: Nenhum arquivo de resultado encontrado dentro de allure-results.");
+             process.exit(0);
+           }
+
+           console.log(`Transmitindo ${results.length} arquivos para o Allure Server...`);
            const payload = JSON.stringify({ results });
 
+           // Passo 1: Enviar os dados brutos para o endpoint correto
            const req = http.request({
              hostname: "172.22.91.100",
              port: 5050,
-             path: "/allure-docker-service/send-results",
+             path: "/allure-docker-service/send-results?project_id=default",
              method: "POST",
              headers: {
                "Content-Type": "application/json",
                "Content-Length": Buffer.byteLength(payload)
              }
            }, (res) => {
-             let data = "";
-             res.on("data", chunk => data += chunk);
+             let responseBody = "";
+             res.on("data", chunk => responseBody += chunk);
              res.on("end", () => {
-               console.log("Resultados recebidos pelo Allure:", data);
+               console.log("Arquivos enviados com sucesso!");
                
-               // Força a atualização do painel grafico após o recebimento
-               http.get("http://172.22.91.100:5050/allure-docker-service/generate-report", (res2) => {
-                 console.log("Painel atualizado com sucesso!");
+               // Passo 2: Forcar a geracao do relatorio grafico para atualizar a UI
+               http.get("http://172.22.91.100:5050/allure-docker-service/generate-report?project_id=default", (res2) => {
+                 console.log("Comando de atualizacao de relatorio enviado. Verifique o painel grafico.");
                });
              });
            });
 
-           req.on("error", (e) => console.error("Erro no envio:", e));
+           req.on("error", (err) => {
+             console.error("Falha critica na comunicacao com o Allure Server:", err.message);
+           });
+
            req.write(payload);
            req.end();
            '
