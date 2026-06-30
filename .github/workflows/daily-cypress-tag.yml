@@ -48,18 +48,17 @@ jobs:
       - name: Send Results to Allure Server
         if: always()
         run: |
-           echo "Verificando e empacotando os resultados do Cypress de /opt/allure/allure-results..."
+           echo "Transmitindo arquivos de /opt/allure/allure-results para a API..."
            
            node -e '
            const fs = require("fs");
            const path = require("path");
            const http = require("http");
 
-           // Caminho absoluto correto identificado na maquina
            const resultsDir = "/opt/allure/allure-results";
            
            if (!fs.existsSync(resultsDir)) {
-             console.log(`Erro: O diretorio ${resultsDir} nao existe no sistema.`);
+             console.log(`Erro: Diretorio ${resultsDir} nao encontrado.`);
              process.exit(1);
            }
 
@@ -73,13 +72,13 @@ jobs:
            });
 
            if (results.length === 0) {
-             console.log(`Aviso: Nenhum arquivo de resultado encontrado dentro de ${resultsDir}.`);
+             console.log("Nenhum arquivo encontrado para envio.");
              process.exit(0);
            }
 
-           console.log(`Transmitindo ${results.length} arquivos para o Allure Server...`);
            const payload = JSON.stringify({ results });
 
+           // Envia os dados brutos para o motor (Porta 5050)
            const req = http.request({
              hostname: "172.22.91.100",
              port: 5050,
@@ -90,21 +89,18 @@ jobs:
                "Content-Length": Buffer.byteLength(payload)
              }
            }, (res) => {
-             let responseBody = "";
-             res.on("data", chunk => responseBody += chunk);
+             res.on("data", () => {});
              res.on("end", () => {
-               console.log("Arquivos enviados com sucesso!");
+               console.log("Arquivos enviados com sucesso. Solicitando geracao do relatorio...");
                
+               // Solicita a geracao do relatorio no motor (Porta 5050)
                http.get("http://172.22.91.100:5050/allure-docker-service/generate-report?project_id=default", (res2) => {
-                 console.log("Comando de atualizacao enviado para o Allure. Verifique a interface grafica na porta 5252.");
+                 console.log("Processamento concluido na API.");
                });
              });
            });
 
-           req.on("error", (err) => {
-             console.error("Falha critica na comunicacao com o Allure Server:", err.message);
-           });
-
+           req.on("error", (err) => console.error("Erro na API:", err.message));
            req.write(payload);
            req.end();
            '
