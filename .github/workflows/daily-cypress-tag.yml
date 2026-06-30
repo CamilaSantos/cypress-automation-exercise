@@ -48,22 +48,21 @@ jobs:
       - name: Send Results to Allure Server
         if: always()
         run: |
-           echo "Verificando e empacotando os resultados do Cypress..."
+           echo "Verificando e empacotando os resultados do Cypress de /opt/allure/allure-results..."
            
            node -e '
            const fs = require("fs");
            const path = require("path");
            const http = require("http");
 
-           const resultsDir = "allure-results";
+           // Caminho absoluto correto identificado na maquina
+           const resultsDir = "/opt/allure/allure-results";
            
-           // Verifica se o Cypress gerou a pasta de relatorios
            if (!fs.existsSync(resultsDir)) {
-             console.log("Erro: O diretorio allure-results nao existe. Certifique-se de que o plugin do Allure esta ativo no Cypress.");
+             console.log(`Erro: O diretorio ${resultsDir} nao existe no sistema.`);
              process.exit(1);
            }
 
-           // Le todos os arquivos de resultados e converte para Base64 conforme exigido pela API
            const files = fs.readdirSync(resultsDir).filter(f => fs.lstatSync(path.join(resultsDir, f)).isFile());
            const results = files.map(file => {
              const filePath = path.join(resultsDir, file);
@@ -74,14 +73,13 @@ jobs:
            });
 
            if (results.length === 0) {
-             console.log("Aviso: Nenhum arquivo de resultado encontrado dentro de allure-results.");
+             console.log(`Aviso: Nenhum arquivo de resultado encontrado dentro de ${resultsDir}.`);
              process.exit(0);
            }
 
            console.log(`Transmitindo ${results.length} arquivos para o Allure Server...`);
            const payload = JSON.stringify({ results });
 
-           // Passo 1: Enviar os dados brutos para o endpoint correto
            const req = http.request({
              hostname: "172.22.91.100",
              port: 5050,
@@ -97,9 +95,8 @@ jobs:
              res.on("end", () => {
                console.log("Arquivos enviados com sucesso!");
                
-               // Passo 2: Forcar a geracao do relatorio grafico para atualizar a UI
                http.get("http://172.22.91.100:5050/allure-docker-service/generate-report?project_id=default", (res2) => {
-                 console.log("Comando de atualizacao de relatorio enviado. Verifique o painel grafico.");
+                 console.log("Comando de atualizacao enviado para o Allure. Verifique a interface grafica na porta 5252.");
                });
              });
            });
