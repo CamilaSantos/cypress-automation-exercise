@@ -3,8 +3,20 @@ name: Daily Cypress Test & Tag
 on:
   push:
     branches:
-      - main # Este workflow será acionado toda vez que houver um push para a branch 'main'
-  workflow_dispatch: # Permite que você execute este workflow manualmente na aba "Actions" do GitHub
+      - main # Mantém o acionamento automático toda vez que houver um push/commit na branch 'main'
+  
+          # Explicação do formato CRON do GitHub Actions:
+          # .---------------- minuto (0 - 59)
+          # | .-------------- hora (0 - 23) -> Lembrar que utiliza o fuso horário UTC
+          # | | .------------ dia do mês (1 - 31)
+          # | | | .---------- mês (1 - 12)
+          # | | | | .-------- dia da semana (0 - 6) -> 0 = Domingo, 1 = Segunda, ..., 6 = Sábado
+          # | | | | |
+          # * * * * *
+  schedule:
+    - cron: '0 12 * * 0'
+
+  workflow_dispatch: # Mantém a permissão para você executar manualmente na aba "Actions" quando quiser
 
 jobs:
   run-tests-and-tag:

@@ -1,0 +1,14 @@
+services:
+  cypress:
+    build: .
+    container_name: cypress-engine
+    # Mapeia a pasta local para dentro do container (atualização em tempo real)
+    volumes:
+      - .:/e2e
+    # Define o diretório de trabalho
+    working_dir: /e2e
+    # Mantém o container vivo em segundo plano para você mandar comandos quando quiser
+    entrypoint: ["tail", "-f", "/dev/null"]
+    environment:
+      # Evita problemas de falta de memória compartilhada no Chrome/Docker
+      - IPC=host
